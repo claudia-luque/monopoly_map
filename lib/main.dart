@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:html';
 import 'dart:convert';
 
+import 'package:monopoly_map/src/google_map_page.dart';
+
 void main() {
   runApp(MonopolyMap());
 }
@@ -36,6 +38,24 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final postcodeTextController = TextEditingController();
   final budgetTextController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+
+  Future<http.Response> zooplaAPICallAndResponse() async {
+    int radius = 1;
+    int pageSize = 5;
+    String zooplaAPIKey = '<API-KEY-HERE>';
+    String zooplaUrl =
+        'https://api.zoopla.co.uk/api/v1/property_listings.js'
+            + '?listing_status=sale&postcode='
+            + '${postcodeTextController.text}'
+            + '&maximum_price=${budgetTextController.text}'
+            + '&radius=$radius'
+            + '&page_size='
+            + '$pageSize'
+            + '&api_key=$zooplaAPIKey';
+    return http.get(Uri.parse(zooplaUrl));
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,28 +104,17 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: ElevatedButton(
                       onPressed: () async {
-                        //ZooplaAPI(postcodeTextController.text, budgetTextController.text);
-                        // API call
-                        int radius = 1;
-                        int pageSize = 5;
-                        String apiKey = '<API_KEY_HERE>';
-                        String zooplaUrl =
-                            'https://api.zoopla.co.uk/api/v1/property_listings.js'
-                            + '?listing_status=sale&postcode='
-                            + '${postcodeTextController.text}'
-                            + '&maximum_price=${budgetTextController.text}'
-                            + '&radius=$radius'
-                            + '&page_size='
-                            + '$pageSize'
-                            + '&api_key=$apiKey';
-                        var response = await http.get(Uri.parse(zooplaUrl));
-                        window.localStorage['data'] = response.body; // local storage
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GoogleMapPage(latitude, longitude, price)));
 
-                        // getting longitud and latitude
-
-                        // JSON decode
+                        var response = await zooplaAPICallAndResponse();
+                        window.localStorage['data'] = response.body;
                         var jsonData = json.decode(response.body);
-                        print(jsonData);
+
+                        double latitude = jsonData['latitude'];
+                        double longitude = jsonData['longitude'];
+                        double price = jsonData['price'];
 
                         if (_formKey.currentState!.validate()) {
                           // Process data.
