@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:html';
 import 'dart:convert';
 
-import 'package:monopoly_map/src/google_map_page.dart';
+import 'package:monopoly_map/src/google_map_widget.dart';
+import 'package:monopoly_map/src/models/property_details.dart';
 
 void main() {
   runApp(MonopolyMap());
@@ -37,23 +38,85 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final postcodeTextController = TextEditingController();
   final budgetTextController = TextEditingController();
+  final temp = 10000000;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
 
   Future<http.Response> zooplaAPICallAndResponse() async {
     int radius = 1;
-    int pageSize = 5;
+    int pageSize = 50;
     String zooplaAPIKey = '<API-KEY-HERE>';
     String zooplaUrl =
         'https://api.zoopla.co.uk/api/v1/property_listings.js'
             + '?listing_status=sale&postcode='
             + '${postcodeTextController.text}'
-            + '&maximum_price=${budgetTextController.text}'
+            + '&maximum_price=${temp.toString()}'
             + '&radius=$radius'
             + '&page_size='
             + '$pageSize'
             + '&api_key=$zooplaAPIKey';
     return http.get(Uri.parse(zooplaUrl));
+  }
+
+  Form createForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextFormField(
+            controller: postcodeTextController,
+            decoration: const InputDecoration(
+              hintText: 'Postcode',
+            ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please insert a valid Postcode';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
+            controller: budgetTextController,
+            decoration: const InputDecoration(
+              hintText: 'Budget',
+            ),
+            validator: (String? value) {
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                var response = await zooplaAPICallAndResponse();
+                window.localStorage['data'] = response.body;
+                var jsonData = json.decode(response.body);
+
+                List<PropertyDetails> propertyDetailsList = [];
+                for(var obj in jsonData['listing']) {
+                  PropertyDetails data = new PropertyDetails(
+                      obj['county'], obj['image_645_430_url'], obj['property_type'], obj['agent_phone'],
+                      obj['status'], obj['price'], obj['latitude'], obj['longitude']);
+                  propertyDetailsList.add(data);
+                }
+
+                print("property details:");
+                print(propertyDetailsList.length);
+
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GoogleMapWidget(propertyDetailsList)),
+                );
+                if (_formKey.currentState!.validate()) {
+                  // Process data.
+                }
+              },
+              child: const Text('Search'),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
 
@@ -68,64 +131,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
         Center(
           child: SizedBox(
             width: 400,
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  TextFormField(
-                    controller: postcodeTextController,
-                    decoration: const InputDecoration(
-                      hintText: 'Postcode',
-                    ),
-                    validator: (String? value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please insert a valid Postcode';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: budgetTextController,
-                    decoration: const InputDecoration(
-                      hintText: 'Budget',
-                    ),
-                    validator: (String? value) {
-                      // // checking if the value inserted is a valid number
-                      // bool isInteger(num val) => val is int || val == val.roundToDouble();
-                      // var number = int.parse(value.toString());
-                      // if (isInteger(number)) {
-                      //   return 'Please input a valid number';
-                      // }
-                      // return null;
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => GoogleMapPage(latitude, longitude, price)));
-
-                        var response = await zooplaAPICallAndResponse();
-                        window.localStorage['data'] = response.body;
-                        var jsonData = json.decode(response.body);
-
-                        double latitude = jsonData['latitude'];
-                        double longitude = jsonData['longitude'];
-                        double price = jsonData['price'];
-
-                        if (_formKey.currentState!.validate()) {
-                          // Process data.
-                        }
-                      },
-                      child: const Text('Search'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: createForm(),
           ),
         ),
       ],
