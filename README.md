@@ -4,7 +4,7 @@ Monopoly Map is an application that will search for house prices within an area 
 The results will be shown in google maps, each result will be show a monopoly house icon, green
 or red. Where green will be the properties that are in your budget, and red properties outside your budget.
 
-This application const of 3 pages as it is shown in the design.
+This application consists of 3 pages as it is shown in the design.
 
 ## Application design
 
