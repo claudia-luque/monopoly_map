@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:monopoly_map/src/models/property_details.dart';
 import 'package:monopoly_map/src/property_details_page.dart';
+import 'package:monopoly_map/src/utils/constants.dart';
 
 class GoogleMapWidget extends StatefulWidget {
   List<PropertyDetails> properties = [];
@@ -12,31 +13,22 @@ class GoogleMapWidget extends StatefulWidget {
   double cameraLongitude;
 
   GoogleMapWidget(this.cameraLatitude, this.cameraLongitude, this.budget, this.properties);
-
   @override
-  State<GoogleMapWidget> createState() => GoogleMapWidgetState(this.cameraLatitude, this.cameraLongitude, this.budget, this.properties);
+  State<GoogleMapWidget> createState() => GoogleMapWidgetState();
 }
 
 class GoogleMapWidgetState extends State<GoogleMapWidget> {
   late GoogleMapController mapController;
-  List<PropertyDetails> properties =[];
-  double cameraLatitude;
-  double cameraLongitude;
-  String budget;
+
   String greenHouse = 'images/green_house.png';
   String redHotel = 'images/red_hotel.png';
-  double zoom = 17;
-  String markerId = 'bob';
-  Size size = Size(64, 49);
-
-  GoogleMapWidgetState(this.cameraLatitude, this.cameraLongitude, this.budget, this.properties);
 
   Future<Set<Marker>> generateMarkers() async {
     List<Marker> customMarkers = [];
     int i = 0;
 
-    for(var property in properties) {
-      var isAboveBudget = double.parse(property.price) > double.parse(budget);
+    for(var property in widget.properties) {
+      var isAboveBudget = double.parse(property.price) > double.parse(widget.budget);
       final icon = isAboveBudget
           ? await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: size), redHotel)
           : await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: size), greenHouse);
@@ -49,8 +41,7 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => DetailsPage(property)),
-            );
+                  builder: (context) => DetailsPage(property)));
           },
       );
 
@@ -62,10 +53,9 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
     return customMarkers.toSet();
   }
 
-  // TODO: it can be in a init state
   CameraPosition mapPosition() {
     return CameraPosition(
-      target: LatLng(cameraLatitude, cameraLongitude),
+      target: LatLng(widget.cameraLatitude, widget.cameraLongitude),
       zoom: zoom,
     );
   }
@@ -90,7 +80,7 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(title: Text('Map'),),
+      appBar: AppBar(title: Text('Map')),
       body: loadMap(),
     );
   }

@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:monopoly_map/src/google_map_page.dart';
 import 'package:monopoly_map/src/models/property_details.dart';
+import 'package:monopoly_map/src/utils/constants.dart';
 
 void main() {
   runApp(MonopolyMap());
@@ -38,13 +39,9 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final postcodeTextController = TextEditingController();
   final budgetTextController = TextEditingController();
-  final maximunPrice = 100000000;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future<http.Response> zooplaAPICallAndResponse() async {
-    int radius = 1;
-    int pageSize = 100;
-    String zooplaAPIKey = '<API-KEY-HERE>';
     String zooplaUrl =
         'https://api.zoopla.co.uk/api/v1/property_listings.js'
             + '?listing_status=sale&postcode='
@@ -59,7 +56,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   Form createForm() {
     return Form(
-      key: _formKey,
+      key: formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -95,7 +92,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 List<PropertyDetails> propertyDetailsList = [];
                 for(var obj in jsonData['listing']) {
                   PropertyDetails data = new PropertyDetails(
-                      obj['county'],
+                      obj['county'] == null ? 'Not specified':obj['county'],
                       obj['image_645_430_url'],
                       obj['property_type'],
                       obj['agent_phone'],
@@ -114,7 +111,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             budgetTextController.text,
                             propertyDetailsList)),
                 );
-                if (_formKey.currentState!.validate()) {
+                if (formKey.currentState!.validate()) {
                   // Process data.
                 }
               },
@@ -130,7 +127,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      //crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
           height: 100,

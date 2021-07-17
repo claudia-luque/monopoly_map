@@ -2,11 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:monopoly_map/src/models/property_details.dart';
 
-class DetailsPage extends StatelessWidget {
+class DetailsPage extends StatefulWidget {
   PropertyDetails propertyDetails;
-
   DetailsPage(this.propertyDetails);
 
+  @override
+  State<StatefulWidget> createState()  => DetailsPageState();
+}
+
+class DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,7 +26,7 @@ class DetailsPage extends StatelessWidget {
               Container(
                 height: 600,
                 width: 400,
-                child: Image.network('${propertyDetails.image}'),
+                child: Image.network('${widget.propertyDetails.image}'),
               ),
               Container(
                 height: 30,
@@ -32,27 +36,27 @@ class DetailsPage extends StatelessWidget {
               ),
               Container(
                 height: 20,
-                child: Text('County: ${propertyDetails.county}',
+                child: Text('County: ${widget.propertyDetails.county}',
                     style: TextStyle(fontSize: 14)),
               ),
               Container(
                 height: 20,
-                child: Text('Agent phone: ${propertyDetails.agentPhone}',
+                child: Text('Agent phone: ${widget.propertyDetails.agentPhone}',
                     style: TextStyle(fontSize: 14)),
               ),
               Container(
                 height: 20,
-                child: Text('Status: ${propertyDetails.status}',
+                child: Text('Status: ${widget.propertyDetails.status}',
                     style: TextStyle(fontSize: 14)),
               ),
               Container(
                 height: 20,
-                child: Text('Property type: ${propertyDetails.propertyType}',
+                child: Text('Property type: ${widget.propertyDetails.propertyType}',
                     style: TextStyle(fontSize: 14)),
               ),
               Container(
                 height: 20,
-                child: Text('price: ${propertyDetails.price}',
+                child: Text('price: ${widget.propertyDetails.price}',
                     style: TextStyle(fontSize: 14)),
               ),
             ],
