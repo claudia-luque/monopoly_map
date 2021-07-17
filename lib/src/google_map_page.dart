@@ -7,10 +7,10 @@ import 'package:monopoly_map/src/property_details_page.dart';
 import 'package:monopoly_map/src/utils/constants.dart';
 
 class GoogleMapWidget extends StatefulWidget {
-  List<PropertyDetails> properties = [];
-  String budget;
-  double cameraLatitude;
-  double cameraLongitude;
+  final List<PropertyDetails> properties;
+  final String budget;
+  final double cameraLatitude;
+  final double cameraLongitude;
 
   GoogleMapWidget(this.cameraLatitude, this.cameraLongitude, this.budget, this.properties);
   @override
@@ -20,9 +20,7 @@ class GoogleMapWidget extends StatefulWidget {
 class GoogleMapWidgetState extends State<GoogleMapWidget> {
   late GoogleMapController mapController;
 
-  String greenHouse = 'images/green_house.png';
-  String redHotel = 'images/red_hotel.png';
-
+  // Generates markers with a image and send property details to property details page
   Future<Set<Marker>> generateMarkers() async {
     List<Marker> customMarkers = [];
     int i = 0;
@@ -48,8 +46,6 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
       customMarkers.add(marker);
       i++;
     }
-
-
     return customMarkers.toSet();
   }
 

@@ -92,28 +92,26 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 List<PropertyDetails> propertyDetailsList = [];
                 for(var obj in jsonData['listing']) {
                   PropertyDetails data = new PropertyDetails(
-                      obj['county'] == null ? 'Not specified':obj['county'],
-                      obj['image_645_430_url'],
-                      obj['property_type'],
-                      obj['agent_phone'],
-                      obj['status'],
-                      obj['price'],
-                      obj['latitude'],
-                      obj['longitude']);
+                    obj['county'] == null ? 'Not specified':obj['county'],
+                    obj['image_645_430_url'],
+                    obj['property_type'],
+                    obj['agent_phone'],
+                    obj['status'],
+                    obj['price'],
+                    obj['latitude'],
+                    obj['longitude']);
                   propertyDetailsList.add(data);
                 }
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GoogleMapWidget(
-                            jsonData['latitude'],
-                            jsonData['longitude'],
-                            budgetTextController.text,
-                            propertyDetailsList)),
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GoogleMapWidget(
+                      jsonData['latitude'],
+                      jsonData['longitude'],
+                      budgetTextController.text,
+                      propertyDetailsList)
+                  ),
                 );
-                if (formKey.currentState!.validate()) {
-                  // Process data.
-                }
               },
               child: const Text('Search'),
             ),
@@ -127,16 +125,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      //crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(
-          height: 100,
-        ),
+        SizedBox(height: 100,),
         Center(
-          child: SizedBox(
-            width: 400,
-            child: createForm(),
-          ),
+          child: SizedBox(width: 400, child: createForm(),),
         ),
       ],
     );
