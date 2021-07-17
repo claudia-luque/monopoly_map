@@ -21,9 +21,9 @@ Zoopla API that retrieves a list of properties in a JSON format, the results are
 The results will be within a radius of 1 mile.
 Maps JavaScript API to render the Google Maps and google_maps_flutter package to add customize Markers for each property position.
 
-###APIs
+## APIs
 
-#### Zoopla API
+### Zoopla API
 
 In order to feed Monopoly Map with houses details, I am using Zoopla API, [here](https://developer.zoopla.co.uk/docs) 
 you can find all the documentation.
@@ -52,7 +52,6 @@ Note that this is a reduced example of a single response, several fields and des
 more readable and to give you an idea of the JSON file.
 
 JSON
----
 ```json
 {
     "country": "England",
@@ -105,7 +104,7 @@ JSON
 }
 ```
 
-#### Maps JavaScript API
+### Map JavaScript API
 
 Before you start using the Maps JavaScript API, you need 
 a project with a billing account and the Maps JavaScript API enabled. 
@@ -138,7 +137,7 @@ Monopoly Map contain the following dart files:
 | property_details_page |3rd page of the app that shoes details of a selected property from the map|
 | property_details | class model to store property details |
 
-## Final Project screenshots
+### Final Project screenshots
 
 Home Page
 ---
