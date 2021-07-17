@@ -42,7 +42,7 @@ https://api.zoopla.co.uk/api/v1/property_listings.js?
 | ------ | ------ |
 | listing_status | sale |
 | postcode | value is inserted by the user |
-| maximum_price | this is ... |
+| maximum_price | Maximum properties price |
 | radius | 1 |
 | page_size | 100, to cover a big list of properties |
 | api_key | provided by Zoopla API |
