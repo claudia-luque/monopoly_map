@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:html';
 import 'dart:convert';
 
-import 'package:monopoly_map/src/google_map_widget.dart';
+import 'package:monopoly_map/src/google_map_page.dart';
 import 'package:monopoly_map/src/models/property_details.dart';
 
 void main() {
@@ -38,18 +38,18 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final postcodeTextController = TextEditingController();
   final budgetTextController = TextEditingController();
-  final temp = 10000000;
+  final maximunPrice = 100000000;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Future<http.Response> zooplaAPICallAndResponse() async {
     int radius = 1;
-    int pageSize = 50;
+    int pageSize = 100;
     String zooplaAPIKey = '<API-KEY-HERE>';
     String zooplaUrl =
         'https://api.zoopla.co.uk/api/v1/property_listings.js'
             + '?listing_status=sale&postcode='
             + '${postcodeTextController.text}'
-            + '&maximum_price=${temp.toString()}'
+            + '&maximum_price=${maximunPrice.toString()}'
             + '&radius=$radius'
             + '&page_size='
             + '$pageSize'
@@ -91,21 +91,28 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 window.localStorage['data'] = response.body;
                 var jsonData = json.decode(response.body);
 
+                // Getting property details from JSON response body
                 List<PropertyDetails> propertyDetailsList = [];
                 for(var obj in jsonData['listing']) {
                   PropertyDetails data = new PropertyDetails(
-                      obj['county'], obj['image_645_430_url'], obj['property_type'], obj['agent_phone'],
-                      obj['status'], obj['price'], obj['latitude'], obj['longitude']);
+                      obj['county'],
+                      obj['image_645_430_url'],
+                      obj['property_type'],
+                      obj['agent_phone'],
+                      obj['status'],
+                      obj['price'],
+                      obj['latitude'],
+                      obj['longitude']);
                   propertyDetailsList.add(data);
                 }
-
-                print("property details:");
-                print(propertyDetailsList.length);
-
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => GoogleMapWidget(propertyDetailsList)),
+                        builder: (context) => GoogleMapWidget(
+                            jsonData['latitude'],
+                            jsonData['longitude'],
+                            budgetTextController.text,
+                            propertyDetailsList)),
                 );
                 if (_formKey.currentState!.validate()) {
                   // Process data.
@@ -138,4 +145,3 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     );
   }
 }
-

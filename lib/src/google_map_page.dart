@@ -3,51 +3,69 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:monopoly_map/src/models/property_details.dart';
+import 'package:monopoly_map/src/property_details_page.dart';
 
 class GoogleMapWidget extends StatefulWidget {
   List<PropertyDetails> properties = [];
+  String budget;
+  double cameraLatitude;
+  double cameraLongitude;
 
-  GoogleMapWidget(this.properties) {
-    print("hello");
-  }
+  GoogleMapWidget(this.cameraLatitude, this.cameraLongitude, this.budget, this.properties);
 
   @override
-  State<GoogleMapWidget> createState() => GoogleMapWidgetState(this.properties);
+  State<GoogleMapWidget> createState() => GoogleMapWidgetState(this.cameraLatitude, this.cameraLongitude, this.budget, this.properties);
 }
 
 class GoogleMapWidgetState extends State<GoogleMapWidget> {
   late GoogleMapController mapController;
   List<PropertyDetails> properties =[];
-  String imageUrl = 'images/green_house.png';
+  double cameraLatitude;
+  double cameraLongitude;
+  String budget;
+  String greenHouse = 'images/green_house.png';
+  String redHotel = 'images/red_hotel.png';
   double zoom = 17;
   String markerId = 'bob';
   Size size = Size(64, 49);
 
-  GoogleMapWidgetState(this.properties);
+  GoogleMapWidgetState(this.cameraLatitude, this.cameraLongitude, this.budget, this.properties);
 
   Future<Set<Marker>> generateMarkers() async {
     List<Marker> customMarkers = [];
-    //final icon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: size), imageUrl);
     int i = 0;
+
     for(var property in properties) {
-      print(i);
-      final icon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: size), imageUrl);
+      var isAboveBudget = double.parse(property.price) > double.parse(budget);
+      final icon = isAboveBudget
+          ? await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: size), redHotel)
+          : await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: size), greenHouse);
 
       final marker = Marker(
           markerId: MarkerId('$i'),
           icon: icon,
-          position: LatLng(property.latitude, property.longitude));
+          position: LatLng(property.latitude, property.longitude),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => DetailsPage(property)),
+            );
+          },
+      );
+
       customMarkers.add(marker);
       i++;
     }
 
+
     return customMarkers.toSet();
   }
 
-  // it can be in a init state
+  // TODO: it can be in a init state
   CameraPosition mapPosition() {
     return CameraPosition(
-      target: LatLng(51.649532, -0.185563),
+      target: LatLng(cameraLatitude, cameraLongitude),
       zoom: zoom,
     );
   }
@@ -62,7 +80,7 @@ class GoogleMapWidgetState extends State<GoogleMapWidget> {
             initialCameraPosition: mapPosition(),
             markers: snapshot.data,
             onMapCreated: (controller) {
-              mapController = controller; // fix this please
+              mapController = controller;
             },
           ) : CircularProgressIndicator();
         }
