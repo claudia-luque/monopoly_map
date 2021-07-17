@@ -8,7 +8,7 @@ This application const of 3 pages as it is shown in the design.
 
 ## Application design
 
-![monopoly map](monopoly_map_design.png "Title")
+![monopoly map](monopoly_map_design.png)
 
 ## Technologies used
 * Dart: the entire app was created using Flutter.
@@ -106,12 +106,11 @@ JSON
 ```
 
 #### Maps JavaScript API
----
-**NOTE**
+
 Before you start using the Maps JavaScript API, you need 
 a project with a billing account and the Maps JavaScript API enabled. 
 To learn more, see [Set up in Cloud Console](https://developers.google.com/maps/documentation/javascript/cloud-setup).
----
+
 
 Maps JavaScript API needs latitude and longitude to render a position and Zoopla API provides all that information.
 
@@ -141,5 +140,16 @@ Monopoly Map contain the following dart files:
 
 ## Final Project screenshots
 
+Home Page
+---
+![homepage](assets/readme_images/page1_home_page.png)
+
+Map Page
+---
+![homepage](assets/readme_images/page2_map_page.png)
+
+Details Page
+---
+![homepage](assets/readme_images/page3_details_page.png)
  
 
