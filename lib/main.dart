@@ -54,6 +54,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return http.get(Uri.parse(zooplaUrl));
   }
 
+  String isNull(var value) {
+    return value == null ? 'Not specified' : value;
+  }
+
+
   Form createForm() {
     return Form(
       key: formKey,
@@ -92,12 +97,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 List<PropertyDetails> propertyDetailsList = [];
                 for(var obj in jsonData['listing']) {
                   PropertyDetails data = new PropertyDetails(
-                    obj['county'] == null ? 'Not specified':obj['county'],
-                    obj['image_645_430_url'],
-                    obj['property_type'],
-                    obj['agent_phone'],
-                    obj['status'],
-                    obj['price'],
+                    isNull(obj['county']),
+                    isNull(obj['image_645_430_url']),
+                    isNull(obj['property_type']),
+                    isNull(obj['agent_phone']),
+                    isNull(obj['status']),
+                    obj['price'] is String ? obj['price'] : obj['price'].toString(),
                     obj['latitude'],
                     obj['longitude']);
                   propertyDetailsList.add(data);

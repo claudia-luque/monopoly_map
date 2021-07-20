@@ -137,7 +137,40 @@ Monopoly Map contain the following dart files:
 | property_details_page |3rd page of the app that shoes details of a selected property from the map|
 | property_details | class model to store property details |
 
-### Final Project screenshots
+
+### How To Install
+
+Clone the repo
+
+>```
+>https://github.com/claudia-luque/monopoly_map.git
+>```
+
+Add API key for Zoopla in:
+>```
+>lib/src/utils/constants.dart
+>```
+in `zooplaAPIKey`
+
+Add API key for Google Maps in:
+>```
+>web/index.html
+>```
+
+>```
+><script src="https://maps.googleapis.com/maps/api/js?key=<KEY_HERE>&callback=initMap"></script>
+>```
+
+Run using the command:
+>```
+>flutter run
+>```
+
+
+Now, you can open monopolyApp using your favourite IDE.
+
+
+### Project screenshots
 
 Home Page
 ---
